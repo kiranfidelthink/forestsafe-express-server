@@ -1,82 +1,8 @@
-let AWS = require("aws-sdk");
-AWS.config.update({ region: "us-east-1" });
-global.fetch = require("node-fetch");
-var cognitoServiceProvider = new AWS.CognitoIdentityServiceProvider();
-const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
-require("dotenv").config();
-const model = require("../../../Database/dbconfig");
-
-const poolData = {
-  UserPoolId: process.env.UserPoolId,
-  ClientId: process.env.ClientId,
-};
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-let cognitoUser;
-
-exports.signup = async (data) => {
-  let response;
-  let email = data.email;
-  let password = data.password;
-  let phone_number = data.mobile_number;
-  var userData = {
-    Username: email,
-    Pool: userPool,
-  };
-  cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-  var params = {
-    ClientId: process.env.ClientId,
-    Username: email,
-    Password: password,
-    UserAttributes: [
-      {
-        Name: "email",
-        Value: email,
-      },
-      {
-        Name: "phone_number",
-        Value: phone_number,
-      },
-    ],
-  };
-  await cognitoServiceProvider
-    .signUp(params)
-    .promise()
-    .then((res) => {
-      console.log("res", res);
-      response = res;
-      return model.User.create(data);
-    })
-    .then((user) => {
-      console.log("user", user);
-      // response = user;
-    })
-    .catch((err) => {
-      console.log("error", err);
-      response = err;
-    });
-  return response;
-};
+const User = require("../../User/Entities/User");
 
 exports.login = async (data) => {
-  let userData = {
-    Username: data.email,
-    Pool: userPool,
-  };
-  cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-  let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-    Username: data.email,
-    Password: data.password,
-  });
-  return new Promise((resolve, reject) => {
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result) {
-        resolve(result);
-      },
-      onFailure: function (err) {
-        reject(err);
-      },
-    });
-  });
+  const { username } = data;
+  return await User.findOne({ username });
 };
 
 exports.sendOtp = async (data) => {

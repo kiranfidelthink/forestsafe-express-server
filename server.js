@@ -1,10 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { model } = require("./src/api/User/Entities/User");
 const app = express();
 require("./src/Database/db");
-const models = ["User"];
+const models = ["User", "Auth"];
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
