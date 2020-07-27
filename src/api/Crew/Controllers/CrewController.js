@@ -1,10 +1,14 @@
 const CrewService = require("../Services/CrewService");
+const UserService = require("../../User/Services/UserService");
 
-exports.createCrew = async (req, res) => {
-  await CrewService.create(req.body)
-    .then((response) => {
-      console.log("Res", response);
-      res.send(response);
+exports.createCrewWithUser = async (req, res) => {
+  await UserService.create(req.body.user_data)
+    .then((response1) => {
+      req.body.crew_data.ownerId= response1._id
+      return CrewService.create(req.body.crew_data).then((response) => {
+        console.log("Res ", response);
+        res.send(response);
+      });
     })
     .catch((err) => {
       res.status(400).send({
@@ -12,6 +16,7 @@ exports.createCrew = async (req, res) => {
       });
     });
 };
+
 
 exports.getCrews = async (req, res) => {
   console.log("get crews");

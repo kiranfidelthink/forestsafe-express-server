@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 var authentication = require("../../../Resource/utils");
 const CrewController = require("../Controllers/CrewController");
-router.post("/create", authentication.validateToken, CrewController.createCrew);
+
+router.post("/create",CrewController.createCrewWithUser);
 
 router.get("/findAll", authentication.validateToken, CrewController.getCrews);
 

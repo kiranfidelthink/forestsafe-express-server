@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const CrewSchema = new mongoose.Schema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref:"User"
   },
   managerIds: [
     {
