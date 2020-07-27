@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-var authentication = require("../../../Service/service");
+var authentication = require("../../../Resource/utils");
 const UserController = require("../Controllers/UserController");
 router.post("/create", authentication.validateToken, UserController.createUser);
 

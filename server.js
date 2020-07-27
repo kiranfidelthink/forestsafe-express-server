@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 require("./src/Database/db");
-const models = ["User", "Auth"];
+const models = ["User", "Auth","Crew"];
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
