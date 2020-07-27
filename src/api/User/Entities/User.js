@@ -7,11 +7,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
-  email: {
+  emailAddress: {
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -20,8 +22,29 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum: ["CREW_OWNER", "CREW_MANAGER", "CREW_MEMBER", "ADMIN"],
+    default: "CREW_MEMBER",
+    required: true,
+  },
+  name: {
+    type: String,
     trim: true,
     required: true,
+  },
+  superAdmin: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  crewIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Crew",
+    },
+  ],
+  dateUpdated: {
+    type: Date,
+    default: Date.now,
   },
 });
 // hash user password before saving into database

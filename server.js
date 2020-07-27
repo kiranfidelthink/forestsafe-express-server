@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 require("./src/Database/db");
-const models = ["User", "Auth"];
+const models = ["User", "Auth", "Crew"];
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -31,8 +31,8 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-  res.status(err.status || 500);
-  res.render("error");
+  res.status(err.status || 500).send(err.message);
+  console.log("Error", err);
 });
 
 const PORT = process.env.PORT || 8080;
