@@ -12,10 +12,13 @@ exports.login = async (req, res) => {
           .then((match) => {
             if (match) {
               let result = {};
-              const payload = { username: response.username };
+              const payload = {
+                username: response.username,
+                role: response.role,
+              };
               const options = {
                 expiresIn: "2d",
-                issuer: "https://forestsafe.com",
+                issuer: "https://crew.forestsafe.co.nz",
               };
               const secret = process.env.JWT_SECRET;
               const token = jwt.sign(payload, secret, options);

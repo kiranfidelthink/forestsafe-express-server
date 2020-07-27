@@ -9,7 +9,7 @@ module.exports = {
       const token = req.headers.authorization.split(" ")[1]; // Bearer <token>
       const options = {
         expiresIn: "2d",
-        issuer: "https://forestsafe.com",
+        issuer: "https://crew.forestsafe.co.nz",
       };
       try {
         // verify makes sure that the token hasn't expired and has been issued by us
