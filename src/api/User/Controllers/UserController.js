@@ -14,8 +14,8 @@ exports.createUser = async (req, res) => {
 };
 
 exports.getUsers = async (req, res) => {
-  console.log("get users");
-  await UserService.getAll()
+  console.log("get users", req.params);
+  await UserService.getAll(req.params.id)
     .then((response) => {
       console.log("Res", response);
       res.send(response);

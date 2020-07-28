@@ -3,9 +3,8 @@ const User = require("../Entities/User");
 exports.create = async (data) => {
   return await User.create(data);
 };
-
-exports.getAll = async () => {
-  return await User.find();
+exports.getAll = async (filter) => {
+  return await User.find({ crewIds: filter });
 };
 
 exports.get = async (id) => {
