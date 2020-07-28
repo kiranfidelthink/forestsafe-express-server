@@ -1,30 +1,19 @@
 const AuthService = require("../Services/AuthService");
+const authentication = require('../../../Resource/utils')
 const bcrypt = require("bcrypt");
 require("dotenv").config;
-const jwt = require("jsonwebtoken");
+
 exports.login = async (req, res) => {
   await AuthService.login(req.body)
     .then(async (response) => {
       console.log("Res", response);
+      let result;
       if (response !== null) {
         await bcrypt
           .compare(req.body.password, response.password)
           .then((match) => {
             if (match) {
-              let result = {};
-              const payload = {
-                username: response.username,
-                role: response.role,
-              };
-              const options = {
-                expiresIn: "2d",
-                issuer: "https://crew.forestsafe.co.nz",
-              };
-              const secret = process.env.JWT_SECRET;
-              const token = jwt.sign(payload, secret, options);
-              console.log("token", token);
-              result.token = token;
-              result.user = response;
+             result=authentication.generateToken(response)
               res.send(result);
             } else {
               res.status(403).send({
@@ -49,6 +38,19 @@ exports.signup = async (req, res) => {
   return await AuthService.login(req.body)
     .then((response) => {
       console.log("Res1", response);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+};
+
+exports.sendMail = async (req, res) => {
+  return await AuthService.resetPasswordMail(req.body)
+    .then((response) => {
+      console.log("Res", response);
       res.send(response);
     })
     .catch((err) => {
@@ -97,18 +99,7 @@ exports.signup = async (req, res) => {
 //     });
 // };
 
-// exports.sendMail = async (req, res) => {
-//   return await AuthService.sendMail(req.body)
-//     .then((response) => {
-//       console.log("Res", response);
-//       res.send(response);
-//     })
-//     .catch((err) => {
-//       res.status(400).send({
-//         message: err.message || "Some error occurred while retrieving data.",
-//       });
-//     });
-// };
+
 
 // exports.verifyEmail = async (req, res) => {
 //   return await AuthService.verifyEmail(req.body)

@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const AuthController = require("../Controllers/AuthController");
+
 router.post("/login", AuthController.login);
+
+router.post("/send_email", AuthController.sendMail);
 
 // router.post("/signup", AuthController.signUp);
 
