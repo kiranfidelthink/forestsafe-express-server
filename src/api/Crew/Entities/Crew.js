@@ -8,6 +8,7 @@ const CrewSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default:[]
     },
   ],
   crewName: {
@@ -20,6 +21,7 @@ const CrewSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default:[]
     },
   ],
   principalName: {

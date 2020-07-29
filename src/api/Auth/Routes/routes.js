@@ -7,6 +7,8 @@ router.post("/login", AuthController.login);
 
 router.post("/send_email", AuthController.sendMail);
 
+// router.post("/reset_password", AuthController.resetPassword)
+
 router.get(
   "/:id/getToken",
   authentication.validateToken,

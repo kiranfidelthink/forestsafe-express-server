@@ -2,10 +2,25 @@ const CrewService = require("../Services/CrewService");
 const UserService = require("../../User/Services/UserService");
 
 exports.createCrewWithUser = async (req, res) => {
-  await UserService.create(req.body.user_data)
-    .then((response1) => {
-      req.body.crew_data.ownerId= response1._id
-      return CrewService.create(req.body.crew_data).then((response) => {
+  let userData ={
+    "username": req.body.username,
+    "password":req.body.password,
+    "emailAddress": req.body.emailAddress,
+    "role":"CREW_OWNER",
+    "name":req.body.name
+  }
+  let crew_data={
+    "crewName": req.body.crewName,
+    "principalName": req.body.principalName,
+    "principalEmailAddress": req.body.principalEmailAddress,
+    "billingEmailAddress": req.body.billingEmailAddress,
+    "dateBillingExpires": req.body.dateBillingExpires,
+    "industryType": req.body.industryType 
+  }
+  await UserService.create(userData)
+    .then((user) => {
+      crew_data.ownerId= user._id
+      return CrewService.create(crew_data).then((response) => {
         console.log("Res ", response);
         res.send(response);
       });
