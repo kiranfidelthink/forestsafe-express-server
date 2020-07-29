@@ -11,6 +11,11 @@ exports.get = async (id) => {
   return await User.findById(id);
 };
 
+exports.getUser = async (data) => {
+  const { username } = data;
+  return await User.findOne({ username });
+};
+
 exports.update = async (User_id, data) => {
   return await User.findByIdAndUpdate(User_id, data, { new: true });
 };

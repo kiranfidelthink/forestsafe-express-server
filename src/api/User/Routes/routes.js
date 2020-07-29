@@ -6,11 +6,17 @@ router.post("/create", UserController.createUser);
 
 router.get(
   "/:id/findAll",
-  // authentication.validateToken,
+  authentication.validateToken,
   UserController.getUsers
 );
 
 router.get("/:id/find", authentication.validateToken, UserController.getUser);
+
+router.get(
+  "/find",
+  authentication.validateToken,
+  UserController.getUserWithToken
+);
 
 router.delete(
   "/:id/delete",

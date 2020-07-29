@@ -1,7 +1,16 @@
 require("dotenv").config;
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 module.exports = {
+  generateToken: (payload) => {
+    const options = {
+      expiresIn: "2d",
+      issuer: "https://crew.forestsafe.co.nz",
+    };
+    const secret = process.env.JWT_SECRET;
+    return (token = jwt.sign(payload, secret, options));
+  },
   validateToken: (req, res, next) => {
     const authorizationHeaader = req.headers.authorization;
     let result;
@@ -28,5 +37,29 @@ module.exports = {
       };
       res.status(401).send(result);
     }
+  },
+
+  sendMail: async (data, mailOptions) => {
+    var smtpTransport = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: "forestsafetest@gmail.com",
+        pass: "forestsafe",
+      },
+    });
+    return smtpTransport
+      .sendMail(mailOptions)
+
+      .then((res) => {
+        console.log("res", res);
+        return res;
+      })
+      .catch((err) => {
+        console.log("Error", err);
+        throw err;
+      });
   },
 };

@@ -14,11 +14,37 @@ exports.createUser = async (req, res) => {
 };
 
 exports.getUsers = async (req, res) => {
-  console.log("get users", req.params);
+  console.log("get users", req.decoded);
   await UserService.getAll(req.params.id)
     .then((response) => {
       console.log("Res", response);
       res.send(response);
+    })
+    .catch((err) => {
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+};
+
+exports.getUserWithToken = async (req, res) => {
+  console.log("req", req.decoded);
+  if (!req.decoded.username) {
+    res.status(400).send({
+      message: `Insufficient details.`,
+    });
+    return;
+  }
+  await UserService.getUser(req.decoded)
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
+        res.send(response);
+      } else {
+        res.status(400).send({
+          message: `Can not find User with given id ${req.params.id}. User was not found!`,
+        });
+      }
     })
     .catch((err) => {
       res.status(400).send({
