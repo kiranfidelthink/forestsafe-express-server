@@ -44,6 +44,8 @@ const CrewSchema = new mongoose.Schema({
   },
   industryType: {
     type: String,
+    enum: ["LOGGING", "SILVICULTURE", "LAND_PREP_CIVIL", "TRUCKING","HELI_LOGGING"],
+    default: "LOGGING",
     required: true,
     trim: true,
   },

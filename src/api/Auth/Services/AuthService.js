@@ -11,6 +11,7 @@ exports.resetPasswordMail = async (data) => {
       } else {
         if (email === user.emailAddress) {
           const payload = {
+            _id: user._id,
             username: user.username,
             role: user.role,
           };

@@ -10,8 +10,7 @@ exports.login = async (req, res) => {
       console.log("Res", response);
       let result = {};
       if (response !== null) {
-        await bcrypt
-          .compare(req.body.password, response.password)
+        await bcrypt.compare(req.body.password, response.password)
           .then((match) => {
             if (match) {
               const payload = {
@@ -96,7 +95,7 @@ exports.sendMail = async (req, res) => {
       res.status(400).send({
         message: err.message || "Some error occurred while retrieving data.",
       });
-    });
+    }); 
 };
 
 // exports.sendOtp = async (req, res) => {

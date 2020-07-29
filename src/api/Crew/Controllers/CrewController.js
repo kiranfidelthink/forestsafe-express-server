@@ -2,8 +2,14 @@ const CrewService = require("../Services/CrewService");
 const UserService = require("../../User/Services/UserService");
 
 exports.createCrewWithUser = async (req, res) => {
+  var now = new Date()
+  if (now.getMonth() == 11) {
+    var current = new Date(now.getFullYear() + 1, 0, 1);
+  } else {
+    var current = new Date(now.getFullYear(), now.getMonth() +1, now.getDate()+1);
+  }
   let userData ={
-    "username": req.body.username,
+    "username": req.body.emailAddress,
     "password":req.body.password,
     "emailAddress": req.body.emailAddress,
     "role":"CREW_OWNER",
@@ -14,7 +20,7 @@ exports.createCrewWithUser = async (req, res) => {
     "principalName": req.body.principalName,
     "principalEmailAddress": req.body.principalEmailAddress,
     "billingEmailAddress": req.body.billingEmailAddress,
-    "dateBillingExpires": req.body.dateBillingExpires,
+    "dateBillingExpires": current.toISOString(),
     "industryType": req.body.industryType 
   }
   await UserService.create(userData)
