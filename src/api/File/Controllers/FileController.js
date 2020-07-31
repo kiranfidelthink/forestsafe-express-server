@@ -13,7 +13,7 @@ exports.createFile = async (req, res) => {
     res.status(404).send({ message: "Error while uploading file" });
   }
   const { id } = req.file;
-  await updateGridFSFile(id,{doc_id: req.params.doc_id,filename: req.body.filename}) 
+  await updateGridFSFile(id,{doc_id: req.params.doc_id,name: req.body.name}) 
   .then((response) => {
     if (response !== null) {
       console.log("Res", response);
