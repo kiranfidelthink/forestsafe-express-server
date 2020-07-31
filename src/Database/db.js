@@ -51,7 +51,7 @@ const getGridFSFiles = (doc_id) => {
 
 // Delete File
 const deleteGridFSFile = (id) => {
-  return  gfs.files.remove(id)
+  return gfs.files.remove({ _id: mongoose.Types.ObjectId(id) });
 };
 
 // Update File with Document ID while creation and add name
