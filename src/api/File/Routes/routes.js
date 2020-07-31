@@ -4,7 +4,7 @@ const authentication = require("../../../Resource/utils");
 const FileController = require("../Controllers/FileController");
 const { upload } = require("../../../Database/db");
 
-router.post("/:doc_id/create", [authentication.validateToken,upload.single("image")], FileController.createFile);
+router.post("/:doc_id/create", [authentication.validateToken,upload.single("file")], FileController.createFile);
 
 router.get("/:id/find", authentication.validateToken, FileController.getFile);
 
