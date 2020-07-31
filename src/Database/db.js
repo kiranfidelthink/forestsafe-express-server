@@ -5,6 +5,7 @@ const multer = require("multer");
 Grid.mongo = mongoose.mongo;
 require("dotenv").config();
 
+ ;
 mongoose.set("useCreateIndex", true);
 // Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
 // by default, you need to set it to false.
@@ -50,13 +51,13 @@ const getGridFSFiles = (doc_id) => {
 
 // Delete File
 const deleteGridFSFile = (id) => {
-  return gfs.files.remove({ _id: mongoose.Types.ObjectId(id) });
+  return  gfs.files.remove(id)
 };
 
-// Update File with Document ID while creation
+// Update File with Document ID while creation and add name
 const updateGridFSFile = (id, data) => {
   return gfs.files.findOneAndUpdate(
-    { _id: id },
+    { _id:id },
     { $set: data },
     { returnOriginal: false }
   );
