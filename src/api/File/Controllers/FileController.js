@@ -8,50 +8,50 @@ const {
 } = require("../../../Database/db");
 
 exports.createFile = async (req, res) => {
-  console.log("req", req.file);
-  if(!req.file){
+  console.log("body", req.body);
+  if (!req.file) {
     res.status(404).send({ message: "Error while uploading file" });
   }
   const { id } = req.file;
-  await updateGridFSFile(id,{doc_id: req.params.doc_id,name: req.body.name}) 
-  .then((response) => {
-    if (response !== null) {
-      console.log("Res", response);
+  await updateGridFSFile(id, { doc_id: req.params.doc_id, name: req.body.name })
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
         res.send(response);
-    } else {
+      } else {
+        res.status(400).send({
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("err", err);
       res.status(400).send({
-        message: `Can not find File with given id ${req.params.id}. File was not found!`,
+        message: err.message || "Some error occurred while retrieving data.",
       });
-    }
-  })
-  .catch((err) => {
-    console.log("err", err);
-    res.status(400).send({
-      message: err.message || "Some error occurred while retrieving data.",
     });
-  });
 };
 
 exports.getFile = async (req, res) => {
   // Check file exist on MongoDB
   console.log("req", req.params.id);
-  const file = await getGridFSFile(req.params.id)
-  .then((response) => {
-    if (response !== null) {
-      console.log("Res", response);
-      res.send(response);
-    } else {
+  await getGridFSFile(req.params.id)
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
+        res.send(response);
+      } else {
+        res.status(400).send({
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
       res.status(400).send({
-        message: `Can not find File with given id ${req.params.id}. File was not found!`,
+        message: err.message || "Some error occurred while retrieving data.",
       });
-    }
-  })
-  .catch((err) => {
-    res.status(400).send({
-      message: err.message || "Some error occurred while retrieving data.",
     });
-  });
- };
+};
 
 exports.getFileDownload = async (req, res) => {
   // Check file exist on MongoDB
@@ -68,21 +68,21 @@ exports.getFileDownload = async (req, res) => {
 exports.getFiles = async (req, res) => {
   // Check file exist on MongoDB
   console.log("req", req.params.doc_id);
- await getGridFSFiles(req.params.doc_id)
-  .then((response) => {
-    console.log("Res", response);
-    res.send(response);
-  })
-  .catch((err) => {
-    res.status(400).send({
-      message: err.message || "Some error occurred while retrieving data.",
+  await getGridFSFiles(req.params.doc_id)
+    .then((response) => {
+      console.log("Res", response);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
     });
-  });
 };
 
 exports.deleteFile = async (req, res) => {
   console.log("req", req.params.id);
-  await deleteGridFSFile({_id:req.params.id})
+  await deleteGridFSFile(req.params.id)
     .then((response) => {
       if (response !== null) {
         console.log("Res", response);
@@ -119,4 +119,3 @@ exports.updateFile = async (req, res) => {
       });
     });
 };
-
