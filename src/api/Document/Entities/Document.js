@@ -13,13 +13,13 @@ const DocumentSchema = new mongoose.Schema({
   industryType: {
     type: String,
     enum: [
+      "ANY",
       "LOGGING",
       "SILVICULTURE",
       "LAND_PREP_CIVIL",
       "TRUCKING",
       "HELI_LOGGING",
     ],
-    default: "LOGGING",
     required: true,
     trim: true,
   },

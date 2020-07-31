@@ -1,17 +1,21 @@
-const Documents = require("../Entities/Document");
+const Document = require("../Entities/Document");
 
 exports.create = async (data) => {
-  return await Documents.create(data);
+  return await Document.create(data);
 };
 
 exports.getAll = async () => {
-  return await Documents.find();
+  return await Document.find();
+};
+
+exports.get = async (id) => {
+  return await Document.findById(id);
 };
 
 exports.update = async (Document_id, data) => {
-  return await Documents.findByIdAndUpdate(Document_id, data, { new: true });
+  return await Document.findByIdAndUpdate(Document_id, data, { new: true });
 };
 
 exports.delete = async (Document_id) => {
-  return await Documents.findByIdAndRemove(Document_id);
+  return await Document.findByIdAndRemove(Document_id);
 };

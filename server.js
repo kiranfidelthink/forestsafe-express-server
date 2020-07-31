@@ -19,6 +19,9 @@ app.use(function (req, res, next) {
   );
   next();
 });
+app.get("/file", (req, res) => {
+  console.log("req", req);
+});
 
 models.forEach((model) => {
   let routers = require("./src/api/" + model + "/Routes/routes.js");

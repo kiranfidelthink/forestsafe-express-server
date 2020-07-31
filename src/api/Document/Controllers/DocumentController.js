@@ -1,18 +1,17 @@
 const DocumentService = require("../Services/DocumentService");
 
 exports.createDocument = async (req, res) => {
-    await DocumentService.create(req.body)
-      .then((response) => {
-        console.log("Res", response);
-        res.send(response);
-      })
-      .catch((err) => {
-        res.status(400).send({
-          message: err.message || "Some error occurred while retrieving data.",
-        });
+  await DocumentService.create(req.body)
+    .then((response) => {
+      console.log("Res", response);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
       });
-  };
-
+    });
+};
 
 exports.getDocuments = async (req, res) => {
   console.log("get documents");
@@ -20,6 +19,26 @@ exports.getDocuments = async (req, res) => {
     .then((response) => {
       console.log("Res", response);
       res.send(response);
+    })
+    .catch((err) => {
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+};
+
+exports.getDocument = async (req, res) => {
+  console.log("req", req);
+  await DocumentService.get(req.params.id)
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
+        res.send(response);
+      } else {
+        res.status(400).send({
+          message: `Can not find User with given id ${req.params.id}. User was not found!`,
+        });
+      }
     })
     .catch((err) => {
       res.status(400).send({

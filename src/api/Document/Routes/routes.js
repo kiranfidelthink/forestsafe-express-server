@@ -3,9 +3,23 @@ const router = express.Router();
 const authentication = require("../../../Resource/utils");
 const DocumentController = require("../Controllers/DocumentController");
 
-router.post("/create", authentication.validateToken,DocumentController.createDocument);
+router.post(
+  "/create",
+  authentication.validateToken,
+  DocumentController.createDocument
+);
 
-router.get("/findAll", authentication.validateToken, DocumentController.getDocuments);
+router.get(
+  "/findAll",
+  authentication.validateToken,
+  DocumentController.getDocuments
+);
+
+router.get(
+  "/:id/find",
+  authentication.validateToken,
+  DocumentController.getDocument
+);
 
 router.delete(
   "/:id/delete",

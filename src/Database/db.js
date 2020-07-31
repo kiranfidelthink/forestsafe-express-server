@@ -17,7 +17,6 @@ mongoose.connect(process.env.DB, {
   useUnifiedTopology: true,
 });
 var conn = mongoose.connection;
-
 //We enebled the Listener
 conn.on("error", () => {
   console.error("Error occured in db connection");
@@ -74,7 +73,6 @@ const storage = new GridFsStorage({
   file: (req, file) => {
     console.log("file", file);
     return new Promise((resolve) => {
-      console.log("db", process.env.DB);
       const fileInfo = {
         filename: file.originalname,
         bucketName: "file_uploads",

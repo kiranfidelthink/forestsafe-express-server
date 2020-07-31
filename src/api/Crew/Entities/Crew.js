@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 const CrewSchema = new mongoose.Schema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"User"
+    ref: "User",
   },
   managerIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default:[]
+      default: [],
     },
   ],
   crewName: {
@@ -21,7 +21,7 @@ const CrewSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default:[]
+      default: [],
     },
   ],
   principalName: {
@@ -44,8 +44,13 @@ const CrewSchema = new mongoose.Schema({
   },
   industryType: {
     type: String,
-    enum: ["LOGGING", "SILVICULTURE", "LAND_PREP_CIVIL", "TRUCKING","HELI_LOGGING"],
-    default: "LOGGING",
+    enum: [
+      "LOGGING",
+      "SILVICULTURE",
+      "LAND_PREP_CIVIL",
+      "TRUCKING",
+      "HELI_LOGGING",
+    ],
     required: true,
     trim: true,
   },
