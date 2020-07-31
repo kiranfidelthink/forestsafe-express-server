@@ -38,17 +38,31 @@ conn.on("open", () => {
   );
 });
 
+// Get One File
 const getGridFSFile = (id) => {
   return gfs.files.findOne({ _id: mongoose.Types.ObjectId(id) });
 };
 
-const getGridFSFiles = async () => {
-  return await gfs.files.find();
-};
-const deleteGridFSFile = (id) => {
-  return gfs.remove({ _id: mongoose.Types.ObjectId(id) });
+// Get All Files
+const getGridFSFiles = (doc_id) => {
+  return gfs.files.find({ doc_id: doc_id }).toArray();
 };
 
+// Delete File
+const deleteGridFSFile = (id) => {
+  return gfs.files.remove({ _id: mongoose.Types.ObjectId(id) });
+};
+
+// Update File with Document ID while creation
+const updateGridFSFile = (id, data) => {
+  return gfs.files.findOneAndUpdate(
+    { _id: id },
+    { $set: data },
+    { returnOriginal: false }
+  );
+};
+
+// Download File
 const createGridFSReadStream = (id) => {
   return gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(id));
 };
@@ -89,3 +103,4 @@ module.exports.getGridFSFiles = getGridFSFiles;
 module.exports.createGridFSReadStream = createGridFSReadStream;
 module.exports.upload = upload;
 module.exports.deleteGridFSFile = deleteGridFSFile;
+module.exports.updateGridFSFile = updateGridFSFile;
