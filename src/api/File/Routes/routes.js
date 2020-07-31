@@ -2,15 +2,13 @@ const express = require("express");
 const router = express.Router();
 const authentication = require("../../../Resource/utils");
 const FileController = require("../Controllers/FileController");
-router.post("/:doc_id/create", authentication.validateToken,FileController.createFile);
+const { upload } = require("../../../Database/db");
 
-router.get("/:doc_id/findAll", authentication.validateToken, FileController.getFiles);
+router.post("/create", upload.single("image"), FileController.createFile);
 
-router.delete(
-  "/:doc_id/:id/delete",
-  authentication.validateToken,
-  FileController.deleteFile
-);
+router.get("/:id/find", FileController.getFile);
+
+router.delete("/:id/delete", FileController.deleteFile);
 
 router.patch(
   "/:doc_id/:id/update",
