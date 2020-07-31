@@ -35,6 +35,27 @@ exports.createFile = async (req, res) => {
 exports.getFile = async (req, res) => {
   // Check file exist on MongoDB
   console.log("req", req.params.id);
+  const file = await getGridFSFile(req.params.id)
+  .then((response) => {
+    if (response !== null) {
+      console.log("Res", response);
+      res.send(response);
+    } else {
+      res.status(400).send({
+        message: `Can not find File with given id ${req.params.id}. File was not found!`,
+      });
+    }
+  })
+  .catch((err) => {
+    res.status(400).send({
+      message: err.message || "Some error occurred while retrieving data.",
+    });
+  });
+ };
+
+exports.getFileDownload = async (req, res) => {
+  // Check file exist on MongoDB
+  console.log("req", req.params.id);
   const file = await getGridFSFile(req.params.id);
   if (!file) {
     res.status(404).send({ message: "File not found" });
@@ -61,14 +82,14 @@ exports.getFiles = async (req, res) => {
 
 exports.deleteFile = async (req, res) => {
   console.log("req", req.params.id);
-  await deleteGridFSFile(req.params.id)
+  await deleteGridFSFile({_id:req.params.id})
     .then((response) => {
       if (response !== null) {
         console.log("Res", response);
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
         });
       }
     })
@@ -87,7 +108,7 @@ exports.updateFile = async (req, res) => {
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
         });
       }
     })

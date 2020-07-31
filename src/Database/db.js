@@ -50,6 +50,16 @@ const getGridFSFiles = (doc_id) => {
 };
 
 // Delete File
+// const deleteGridFSFile = (options) => {
+//   console.log("options",options)
+//   let id= options._id
+//   gfs.remove(options._id, function (err) {
+//     if (err) {
+//       console.log("errr",err)
+//     };
+//     console.log('success');
+//   });
+// };
 const deleteGridFSFile = (id) => {
   return gfs.files.remove({ _id: mongoose.Types.ObjectId(id) });
 };
