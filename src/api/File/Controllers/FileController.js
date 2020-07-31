@@ -4,7 +4,7 @@ const {
   getGridFSFiles,
   createGridFSReadStream,
   deleteGridFSFile,
-  updateGridFSFile
+  updateGridFSFile,
 } = require("../../../Database/db");
 
 exports.createFile = async (req, res) => {
@@ -12,11 +12,12 @@ exports.createFile = async (req, res) => {
   if(!req.file){
     res.status(404).send({ message: "Error while uploading file" });
   }
-  const { originalname, mimetype, id, size } = req.file;
-  await updateGridFSFile(id,{doc_id: req.params.doc_id}) .then((response) => {
+  const { id } = req.file;
+  await updateGridFSFile(id,{doc_id: req.params.doc_id,name: req.body.name}) 
+  .then((response) => {
     if (response !== null) {
       console.log("Res", response);
-      res.send(response);
+        res.send(response);
     } else {
       res.status(400).send({
         message: `Can not find File with given id ${req.params.id}. File was not found!`,
@@ -34,11 +35,32 @@ exports.createFile = async (req, res) => {
 exports.getFile = async (req, res) => {
   // Check file exist on MongoDB
   console.log("req", req.params.id);
-  const image = await getGridFSFile(req.params.id);
-  if (!image) {
-    res.status(404).send({ message: "Image not found" });
+  const file = await getGridFSFile(req.params.id)
+  .then((response) => {
+    if (response !== null) {
+      console.log("Res", response);
+      res.send(response);
+    } else {
+      res.status(400).send({
+        message: `Can not find File with given id ${req.params.id}. File was not found!`,
+      });
+    }
+  })
+  .catch((err) => {
+    res.status(400).send({
+      message: err.message || "Some error occurred while retrieving data.",
+    });
+  });
+ };
+
+exports.getFileDownload = async (req, res) => {
+  // Check file exist on MongoDB
+  console.log("req", req.params.id);
+  const file = await getGridFSFile(req.params.id);
+  if (!file) {
+    res.status(404).send({ message: "File not found" });
   }
-  res.setHeader("content-type", image.contentType);
+  res.setHeader("content-type", file.contentType);
   const readStream = createGridFSReadStream(req.params.id);
   readStream.pipe(res);
 };
@@ -46,7 +68,7 @@ exports.getFile = async (req, res) => {
 exports.getFiles = async (req, res) => {
   // Check file exist on MongoDB
   console.log("req", req.params.doc_id);
- var i=await getGridFSFiles(req.params.doc_id)
+ await getGridFSFiles(req.params.doc_id)
   .then((response) => {
     console.log("Res", response);
     res.send(response);
@@ -60,14 +82,14 @@ exports.getFiles = async (req, res) => {
 
 exports.deleteFile = async (req, res) => {
   console.log("req", req.params.id);
-  await deleteGridFSFile(req.params.id)
+  await deleteGridFSFile({_id:req.params.id})
     .then((response) => {
       if (response !== null) {
         console.log("Res", response);
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
         });
       }
     })
@@ -79,14 +101,14 @@ exports.deleteFile = async (req, res) => {
 };
 
 exports.updateFile = async (req, res) => {
-  await FileService.update(req.params.id, req.body)
+  await updateGridFSFile(req.params.id, req.body)
     .then((response) => {
       if (response !== null) {
         console.log("Res", response);
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find File with given id ${req.params.id}. File was not found!`,
         });
       }
     })
@@ -98,51 +120,3 @@ exports.updateFile = async (req, res) => {
     });
 };
 
-// app.get("/write", function (req, res) {
-//   var writestream = gfs.createWriteStream({ filename: db_filename });
-//   fs.createReadStream(local_file).pipe(writestream);
-//   writestream.on("close", function (file) {
-//     res.send("File Created : " + file.filename);
-//   });
-// });
-
-// // Reading a file from MongoDB
-// app.get("/read", function (req, res) {
-//   // Check file exist on MongoDB
-//   gfs.exist({ filename: db_filename }, function (err, file) {
-//     if (err || !file) {
-//       res.send("File Not Found");
-//     } else {
-//       var readstream = gfs.createReadStream({ filename: db_filename });
-//       readstream.pipe(res);
-//     }
-//   });
-// });
-
-// // Delete a file from MongoDB
-// app.get("/delete", function (req, res) {
-//   gfs.exist({ filename: db_filename }, function (err, file) {
-//     if (err || !file) {
-//       res.send("File Not Found");
-//     } else {
-//       gfs.remove({ filename: db_filename }, function (err) {
-//         if (err) res.send(err);
-//         res.send("File Deleted");
-//       });
-//     }
-//   });
-// });
-
-// // Get file information(File Meta Data) from MongoDB
-// app.get("/meta", function (req, res) {
-//   gfs.exist({ filename: db_filename }, function (err, file) {
-//     if (err || !file) {
-//       res.send("File Not Found");
-//     } else {
-//       gfs.files.find({ filename: db_filename }).toArray(function (err, files) {
-//         if (err) res.send(err);
-//         res.send(files);
-//       });
-//     }
-//   });
-// });
