@@ -55,7 +55,7 @@ exports.updateDocument = async (req, res) => {
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find Document with given id ${req.params.id}. Document was not found!`,
         });
       }
     })
@@ -75,7 +75,7 @@ exports.deleteDocument = async (req, res) => {
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find Document with given id ${req.params.id}. Document was not found!`,
         });
       }
     })

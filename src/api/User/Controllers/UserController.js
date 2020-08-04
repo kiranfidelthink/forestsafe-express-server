@@ -77,9 +77,9 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   if (req.body.password) {
     let password = bcrypt.hashSync(req.body.password, saltRounds);
-    let encryptPassword= {
-      password: password
-    }
+    let encryptPassword = {
+      password: password,
+    };
     await UserService.update(req.params.id, encryptPassword)
       .then((response) => {
         if (response !== null) {
@@ -87,7 +87,7 @@ exports.updateUser = async (req, res) => {
           res.send(response);
         } else {
           res.status(400).send({
-            message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+            message: `Can not find User with given id ${req.params.id}. User was not found!`,
           });
         }
       })
@@ -105,7 +105,7 @@ exports.updateUser = async (req, res) => {
           res.send(response);
         } else {
           res.status(400).send({
-            message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+            message: `Can not find User with given id ${req.params.id}. User was not found!`,
           });
         }
       })
@@ -126,7 +126,7 @@ exports.deleteUser = async (req, res) => {
         res.send(response);
       } else {
         res.status(400).send({
-          message: `Can not find Appliance with given id ${req.params.id}. Appliance was not found!`,
+          message: `Can not find User with given id ${req.params.id}. User was not found!`,
         });
       }
     })

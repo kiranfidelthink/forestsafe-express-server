@@ -5,7 +5,6 @@ const multer = require("multer");
 Grid.mongo = mongoose.mongo;
 require("dotenv").config();
 
- ;
 mongoose.set("useCreateIndex", true);
 // Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
 // by default, you need to set it to false.
@@ -31,7 +30,7 @@ conn.on("open", () => {
     bucketName: "file_uploads",
   });
   // Init stream
-  gfs = Grid(conn.db);
+  gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("file_uploads");
   console.log(
     "[!] The database connection opened successfully in GridFS service"
@@ -48,25 +47,24 @@ const getGridFSFiles = (doc_id) => {
   return gfs.files.find({ doc_id: doc_id }).toArray();
 };
 
-// Delete File
-// const deleteGridFSFile = (options) => {
-//   console.log("options",options)
-//   let id= options._id
-//   gfs.remove(options._id, function (err) {
-//     if (err) {
-//       console.log("errr",err)
-//     };
-//     console.log('success');
-//   });
-// };
-const deleteGridFSFile = (id) => {
-  return gfs.files.remove({ _id: mongoose.Types.ObjectId(id) });
+const deleteGridFSFile = async (id) => {
+  let response;
+  response = await gfs.remove({
+    _id: mongoose.Types.ObjectId(id),
+    root: "file_uploads",
+  });
+  if (response.message) {
+    response = err;
+    return err;
+  }
+  response = { message: "file successfully deleted" };
+  return response;
 };
 
 // Update File with Document ID while creation and add name
 const updateGridFSFile = (id, data) => {
   return gfs.files.findOneAndUpdate(
-    { _id:id },
+    { _id: id },
     { $set: data },
     { returnOriginal: false }
   );
@@ -82,7 +80,6 @@ const storage = new GridFsStorage({
   cache: true,
   options: { useUnifiedTopology: true },
   file: (req, file) => {
-    console.log("file", file);
     return new Promise((resolve) => {
       const fileInfo = {
         filename: file.originalname,

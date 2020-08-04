@@ -17,7 +17,7 @@ exports.createFile = async (req, res) => {
     .then((response) => {
       if (response !== null) {
         console.log("Res", response);
-        res.send(response);
+        res.send(response.value);
       } else {
         res.status(400).send({
           message: `Can not find File with given id ${req.params.id}. File was not found!`,
@@ -82,16 +82,20 @@ exports.getFiles = async (req, res) => {
 
 exports.deleteFile = async (req, res) => {
   console.log("req", req.params.id);
-  await deleteGridFSFile(req.params.id)
-    .then((response) => {
+  await getGridFSFile(req.params.id)
+    .then(async (response) => {
       if (response !== null) {
         console.log("Res", response);
-        res.send(response);
+        return await deleteGridFSFile(req.params.id);
       } else {
         res.status(400).send({
           message: `Can not find File with given id ${req.params.id}. File was not found!`,
         });
       }
+    })
+    .then((response) => {
+      console.log("Res", response);
+      res.send(response);
     })
     .catch((err) => {
       res.status(400).send({
