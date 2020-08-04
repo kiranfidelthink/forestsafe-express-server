@@ -30,4 +30,9 @@ router.patch(
   UserController.updateUser
 );
 
+router.patch(
+  "/:id/update_password",
+  authentication.validateToken,
+  UserController.updatePassword
+);
 module.exports = router;

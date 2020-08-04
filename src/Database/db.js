@@ -47,6 +47,7 @@ const getGridFSFiles = (doc_id) => {
   return gfs.files.find({ doc_id: doc_id }).toArray();
 };
 
+// Delete File
 const deleteGridFSFile = async (id) => {
   let response;
   response = await gfs.remove({
@@ -57,7 +58,7 @@ const deleteGridFSFile = async (id) => {
     response = err;
     return err;
   }
-  response = { message: "file successfully deleted" };
+  response = { message: "File successfully deleted" };
   return response;
 };
 

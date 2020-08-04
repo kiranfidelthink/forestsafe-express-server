@@ -75,49 +75,48 @@ exports.getUser = async (req, res) => {
     });
 };
 exports.updateUser = async (req, res) => {
-  if (req.body.password) {
-    let password = bcrypt.hashSync(req.body.password, saltRounds);
-    let encryptPassword = {
-      password: password,
-    };
-    await UserService.update(req.params.id, encryptPassword)
-      .then((response) => {
-        if (response !== null) {
-          console.log("Res", response);
-          res.send(response);
-        } else {
-          res.status(400).send({
-            message: `Can not find User with given id ${req.params.id}. User was not found!`,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log("errr", err);
+  await UserService.update(req.params.id, req.body)
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
+        res.send(response);
+      } else {
         res.status(400).send({
-          message: err.message || "Some error occurred while retrieving data.",
+          message: `Can not find User with given id ${req.params.id}. User was not found!`,
         });
+      }
+    })
+    .catch((err) => {
+      console.log("errr", err);
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
       });
-  } else {
-    await UserService.update(req.params.id, req.body)
-      .then((response) => {
-        if (response !== null) {
-          console.log("Res", response);
-          res.send(response);
-        } else {
-          res.status(400).send({
-            message: `Can not find User with given id ${req.params.id}. User was not found!`,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log("errr", err);
-        res.status(400).send({
-          message: err.message || "Some error occurred while retrieving data.",
-        });
-      });
-  }
+    });
 };
 
+exports.updatePassword = async (req, res) => {
+  let password = bcrypt.hashSync(req.body.password, saltRounds);
+  let encryptPassword = {
+    password: password,
+  };
+  await UserService.updatePassword(req.params.id,encryptPassword)
+    .then((response) => {
+      if (response !== null) {
+        console.log("Res", response);
+        res.send(response);
+      } else {
+        res.status(400).send({
+          message: `Can not find User with given id ${req.params.id}. User was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("err", err);
+      res.status(400).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+};
 exports.deleteUser = async (req, res) => {
   await UserService.delete(req.params.id)
     .then((response) => {
